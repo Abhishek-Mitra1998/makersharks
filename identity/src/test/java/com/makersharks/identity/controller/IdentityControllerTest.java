@@ -47,4 +47,23 @@ public class IdentityControllerTest {
         Mockito.verify(this.userService, Mockito.times(1)).register(Mockito.any());
     }
 
+    @Test
+    public void whenLogin_thenHappyFlow() throws Exception {
+        Mockito.when(userService.register(Mockito.any())).thenReturn(
+                ApiResponse.<String>builder()
+                        .success(true)
+                        .data("Mock Token Created")
+                        .build()
+        );
+
+        this.mockMvc.perform(
+                        MockMvcRequestBuilders.post("/api/user/login")
+                                .content(new ObjectMapper().writeValueAsString(UserServiceHelper.getLoginDaoMock()))
+                                .contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(MockMvcResultMatchers.status().isOk());
+
+
+        Mockito.verify(this.userService, Mockito.times(1)).login(Mockito.any());
+    }
+
 }
