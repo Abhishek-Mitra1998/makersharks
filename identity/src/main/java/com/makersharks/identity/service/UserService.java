@@ -8,6 +8,7 @@ import com.makersharks.identity.entity.UserDetails;
 import com.makersharks.identity.exception.CustomException;
 import com.makersharks.identity.repo.UserRepo;
 import com.makersharks.identity.util.UserUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.time.Instant;
@@ -15,7 +16,12 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Component
+@Slf4j
 public class UserService {
+
+    /**
+     *     TODO : Create an admin api to fetch all users based on an Admin Role
+     */
 
     private final UserRepo userRepo;
     private final UserUtil userUtil;
@@ -41,6 +47,9 @@ public class UserService {
         if(null != userDao.getUsername() && !userDao.getUsername().isEmpty()){
             Optional<User> checkUser = userRepo.findByUsername(userDao.getUsername());
             if(checkUser.isEmpty()){
+
+                log.info("Registering User ==>{}",userDao.getUsername());
+
                 User newUser = User.builder()
                         .id(UUID.randomUUID().toString())
                         .email(userDao.getEmail())
@@ -71,8 +80,6 @@ public class UserService {
 
     public ApiResponse<String> login(LoginDao loginDao) throws CustomException {
 
-        //TODO : Create a validation check for all the DAOs using validity
-
         Optional<User> checkUser = userRepo.findByUsername(loginDao.getUsername());
         if(checkUser.isPresent()){
             String hashed = userUtil.generatePasswordHash(loginDao.getPassword());
@@ -80,6 +87,8 @@ public class UserService {
 
             if(existing.getPassword().equals(hashed)){
                 String token = userUtil.generateToken(existing);
+
+                log.info("Logging In User ==>{}",loginDao.getUsername());
 
                 return ApiResponse.<String>builder()
                         .success(true)
@@ -91,15 +100,21 @@ public class UserService {
         }
 
         throw new CustomException("E-005","User Not Found");
-        //TODO : Use timestamps in Entities - missed while creating
-
 
     }
 
+    /**
+     * Function to fetch user from database for a specific user
+     * @param username
+     * @return
+     * @throws CustomException
+     */
     public ApiResponse<UserDetails> fetchUser(String username) throws CustomException {
         Optional<User> existing = userRepo.findByUsername(username);
         if(existing.isPresent()){
             User thisUser = existing.get();
+
+            log.info("Fetching Details for User ==>{}",username);
 
             return ApiResponse.<UserDetails>builder()
                     .success(true)
@@ -119,9 +134,6 @@ public class UserService {
         }
         throw new CustomException("E-005","USER NOT FOUND");
     }
-
-
-
 
 
 }

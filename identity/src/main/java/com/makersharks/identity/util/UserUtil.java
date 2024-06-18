@@ -18,6 +18,10 @@ import java.util.List;
 @Component
 public class UserUtil {
 
+    /**
+     * TODO : An expiry can be added to the token later On
+     */
+
     @Value("${app.secret-key}")
     private String SECRET_KEY;
 
@@ -66,10 +70,14 @@ public class UserUtil {
                 .signWith(SignatureAlgorithm.HS256,privateKeyDecoded)
                 .compact();
 
-        //TODO : An expiry can be added to the token later on
-        //TODO : A signed token can be implemented
     }
 
+    /**
+     * Function to test token's validity
+     * @param token
+     * @param username
+     * @return
+     */
     public boolean isTokenValid(String token,String username) {
 
         String[] chunks = token.split("\\.");
