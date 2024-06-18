@@ -19,6 +19,11 @@ import java.util.UUID;
 @Slf4j
 public class UserService {
 
+    /**
+     *     TODO : Create an admin api to fetch all users based on an Admin Role
+     *     TODO : Introduce Logging into all classes
+     */
+
     private final UserRepo userRepo;
     private final UserUtil userUtil;
 
@@ -43,6 +48,9 @@ public class UserService {
         if(null != userDao.getUsername() && !userDao.getUsername().isEmpty()){
             Optional<User> checkUser = userRepo.findByUsername(userDao.getUsername());
             if(checkUser.isEmpty()){
+
+                log.info("Registering User ==>{}",userDao.getUsername());
+
                 User newUser = User.builder()
                         .id(UUID.randomUUID().toString())
                         .email(userDao.getEmail())
@@ -81,6 +89,8 @@ public class UserService {
             if(existing.getPassword().equals(hashed)){
                 String token = userUtil.generateToken(existing);
 
+                log.info("Logging In User ==>{}",loginDao.getUsername());
+
                 return ApiResponse.<String>builder()
                         .success(true)
                         .data(token)
@@ -105,6 +115,8 @@ public class UserService {
         if(existing.isPresent()){
             User thisUser = existing.get();
 
+            log.info("Fetching Details for User ==>{}",username);
+
             return ApiResponse.<UserDetails>builder()
                     .success(true)
                     .data(
@@ -123,10 +135,6 @@ public class UserService {
         }
         throw new CustomException("E-005","USER NOT FOUND");
     }
-
-
-    //TODO : Create an admin api to fetch all users
-    //TODO : Last Task - Introduce Logging
 
 
 }

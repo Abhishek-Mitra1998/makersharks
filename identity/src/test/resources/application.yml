@@ -8,6 +8,28 @@ spring:
   username: root
   password: root
   driver-class-name: com.mysql.cj.jdbc.Driver
+ config:
+  activate:
+   on-profile: dev
 app:
  secret-key : alsjdSLDFHkhNjJkkknkvfHfdhGjfHKJsHGFlkJjlJiUHYgbvGVwGHhtHyH
+
+---
+
+server:
+ port: 8005
+ servlet:
+  context-path: /identity
+spring:
+ datasource:
+  url: jdbc:mysql://localhost:3305/identity
+  username: root
+  password: root
+  driver-class-name: com.mysql.cj.jdbc.Driver
+ config:
+  activate:
+   on-profile: test
+app:
+ secret-key : test-key
+
 
