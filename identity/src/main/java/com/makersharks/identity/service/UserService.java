@@ -21,7 +21,6 @@ public class UserService {
 
     /**
      *     TODO : Create an admin api to fetch all users based on an Admin Role
-     *     TODO : Introduce Logging into all classes
      */
 
     private final UserRepo userRepo;
