@@ -13,5 +13,5 @@ import lombok.NoArgsConstructor;
 public class ApiResponse<T> {
     private boolean success;
     private T data;
-    private CustomException error;
+    private String error;
 }

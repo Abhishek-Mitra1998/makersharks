@@ -1,3 +1,3 @@
 # makersharks
 
-http://localhost:8080/swagger-ui/index.html
+http://localhost:8005/identity/swagger-ui/index.html

@@ -8,6 +8,7 @@ import com.makersharks.identity.entity.UserDetails;
 import com.makersharks.identity.exception.CustomException;
 import com.makersharks.identity.repo.UserRepo;
 import com.makersharks.identity.util.UserUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.time.Instant;
@@ -15,6 +16,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Component
+@Slf4j
 public class UserService {
 
     private final UserRepo userRepo;
@@ -71,8 +73,6 @@ public class UserService {
 
     public ApiResponse<String> login(LoginDao loginDao) throws CustomException {
 
-        //TODO : Create a validation check for all the DAOs using validity
-
         Optional<User> checkUser = userRepo.findByUsername(loginDao.getUsername());
         if(checkUser.isPresent()){
             String hashed = userUtil.generatePasswordHash(loginDao.getPassword());
@@ -91,11 +91,15 @@ public class UserService {
         }
 
         throw new CustomException("E-005","User Not Found");
-        //TODO : Use timestamps in Entities - missed while creating
-
 
     }
 
+    /**
+     * Function to fetch user from database for a specific user
+     * @param username
+     * @return
+     * @throws CustomException
+     */
     public ApiResponse<UserDetails> fetchUser(String username) throws CustomException {
         Optional<User> existing = userRepo.findByUsername(username);
         if(existing.isPresent()){
@@ -121,7 +125,8 @@ public class UserService {
     }
 
 
-
+    //TODO : Create an admin api to fetch all users
+    //TODO : Last Task - Introduce Logging
 
 
 }
